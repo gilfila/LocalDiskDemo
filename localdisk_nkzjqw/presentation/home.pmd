@@ -1,10 +1,10 @@
 {
   "id": "home",
-  "endPoints": [ ],
+  "endPoints": [],
   "presentation": {
     "title": {
       "type": "title",
-      "label": "Workday Extend"
+      "label": "Tonys Test 2.0"
     },
     "body": {
       "type": "section",
