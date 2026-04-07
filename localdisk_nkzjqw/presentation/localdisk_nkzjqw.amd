@@ -1,0 +1,13 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "home",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    }
+  ],
+  "applicationId": "localdisk_nkzjqw"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "localdisk_nkzjqw",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "localdisk_nkzjqw",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "localdisk_nkzjqw"
+}
