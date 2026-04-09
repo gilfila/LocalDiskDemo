@@ -1,20 +1,63 @@
 {
   "id": "home",
-  "endPoints": [],
+  "endPoints": [
+    {
+      "name": "currentUser",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    }
+  ],
   "presentation": {
     "title": {
       "type": "title",
-      "label": "Tonys changes 2.0"
+      "label": "My profile"
     },
     "body": {
       "type": "section",
       "horizontal": false,
       "children": [
         {
-          "type": "text",
-          "id": "hello",
-          "label": "Hello World!",
-          "value": "Welcome from Workday!"
+          "type": "fieldSet",
+          "id": "profileSection",
+          "title": "Signed-in worker",
+          "children": [
+            {
+              "type": "text",
+              "id": "profileName",
+              "label": "Name",
+              "enabled": false,
+              "value": "<% currentUser.descriptor %>"
+            },
+            {
+              "type": "text",
+              "id": "profileWorkerId",
+              "label": "Worker ID",
+              "enabled": false,
+              "value": "<% currentUser.id %>"
+            },
+            {
+              "type": "text",
+              "id": "profileEmail",
+              "label": "Email",
+              "enabled": false,
+              "value": "<% currentUser.person.email %>"
+            },
+            {
+              "type": "text",
+              "id": "profileBusinessTitle",
+              "label": "Business title",
+              "enabled": false,
+              "value": "<% currentUser.primaryJob.businessTitle %>"
+            },
+            {
+              "type": "text",
+              "id": "profileLocation",
+              "label": "Primary work location",
+              "enabled": false,
+              "value": "<% currentUser.primaryJob.location.descriptor %>"
+            }
+          ]
         }
       ]
     },
