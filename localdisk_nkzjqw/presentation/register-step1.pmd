@@ -30,13 +30,13 @@
         {
           "type": "richText",
           "id": "eligibilityBanner",
-          "visible": "<% eligibilityCheck.zipFound %>",
-          "value": "<% eligibilityCheck.isEligible ? '✓ You live ' + Math.round(eligibilityCheck.distanceMiles) + ' miles from the nearest office. You are eligible for the annual $100 commuter benefit.' : 'You live ' + Math.round(eligibilityCheck.distanceMiles) + ' miles from the nearest office. You are not eligible for the commuter benefit (must be > 20 miles).' %>"
+          "visible": "<% eligibilityCheck.zipFound != null && eligibilityCheck.zipFound %>",
+          "value": "<% eligibilityCheck.isEligible ? 'Eligible: You live ' + Math.round(eligibilityCheck.distanceMiles) + ' miles from the nearest office. You qualify for the annual $100 commuter benefit.' : 'You live ' + Math.round(eligibilityCheck.distanceMiles) + ' miles from the nearest office. You are not eligible for the commuter benefit (must be > 20 miles).' %>"
         },
         {
           "type": "richText",
           "id": "zipNotFoundBanner",
-          "visible": "<% !eligibilityCheck.zipFound %>",
+          "visible": "<% eligibilityCheck.zipFound != null && !eligibilityCheck.zipFound %>",
           "value": "Distance check: your home zip code was not found in our lookup. You can still register your car. Eligibility will be reviewed manually."
         },
         {
@@ -140,7 +140,7 @@
     "outboundEndPoints": [
       {
         "name": "toReview",
-        "onSend": "<% self.data = { make: carMake.value, model: carModel.value, year: carYear.value, licensePlate: licensePlate.value, plateState: plateState.value.id, distanceMiles: eligibilityCheck.distanceMiles, isEligible: eligibilityCheck.isEligible, workerId: currentUser.id }; %>"
+        "onSend": "<% self.data = { make: carMake.value, model: carModel.value, year: carYear.value, licensePlate: licensePlate.value, plateState: plateState.value ? plateState.value.id : null, distanceMiles: eligibilityCheck.distanceMiles, isEligible: eligibilityCheck.isEligible, workerId: currentUser.id }; %>"
       }
     ]
   }
