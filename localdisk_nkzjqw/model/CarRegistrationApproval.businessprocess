@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "CarRegistrationApproval",
+  "label": "Car Registration Approval",
+  "description": "Routes a worker's car registration to their direct manager for approval or denial",
+  "targetBusinessObject": "CarRegistration",
+  "useForOrchestrate": false,
+  "allowsCancel": false,
+  "approvalStep": {
+    "actions": ["APPROVE", "DENY"],
+    "pageRoute": "/manage"
+  },
+  "details": {
+    "pageRoute": "/manage"
+  },
+  "actionSteps": []
+}

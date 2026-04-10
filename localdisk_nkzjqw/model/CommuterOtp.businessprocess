@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "CommuterOtp",
+  "label": "Commuter OTP",
+  "description": "Issues a $100 one-time payment to an eligible worker as a commuter benefit",
+  "targetBusinessObject": "Worker",
+  "useForOrchestrate": false,
+  "allowsCancel": false,
+  "actionSteps": []
+}
