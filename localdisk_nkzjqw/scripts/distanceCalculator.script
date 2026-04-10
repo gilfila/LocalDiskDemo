@@ -1,0 +1,40 @@
+// distanceCalculator.script
+// Haversine formula — returns distance in miles between two lat/lng points.
+
+var EARTH_RADIUS_MILES = 3958.8;
+
+var toRadians = function(degrees) {
+  return degrees * (Math.PI / 180);
+};
+
+var haversineDistance = function(lat1, lng1, lat2, lng2) {
+  var dLat = toRadians(lat2 - lat1);
+  var dLng = toRadians(lng2 - lng1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return EARTH_RADIUS_MILES * c;
+};
+
+// Returns the minimum distance from point to any location in a list.
+// locations: array of { lat, lng }
+var minDistanceToLocations = function(homeLat, homeLng, locations) {
+  var minDist = null;
+  for (var i = 0; i < locations.length; i++) {
+    var dist = haversineDistance(homeLat, homeLng, locations[i].lat, locations[i].lng);
+    if (minDist === null || dist < minDist) {
+      minDist = dist;
+    }
+  }
+  return minDist;
+};
+
+{
+  "haversineDistance": haversineDistance,
+  "minDistanceToLocations": minDistanceToLocations,
+  "toRadians": toRadians
+}
