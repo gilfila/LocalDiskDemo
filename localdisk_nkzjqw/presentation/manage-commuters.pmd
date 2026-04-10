@@ -1,0 +1,193 @@
+{
+  "id": "manage-commuters",
+  "endPoints": [
+    {
+      "name": "currentUser",
+      "baseUrlType": "workday-staffing",
+      "url": "/workers/me",
+      "authType": "sso"
+    },
+    {
+      "name": "teamRegistrations",
+      "baseUrlType": "orchestrate",
+      "url": "getTeamRegistrations/launch",
+      "httpMethod": "post",
+      "authType": "sso",
+      "deferred": false,
+      "onSend": "<% self.data = { managerId: currentUser.id }; %>"
+    },
+    {
+      "name": "issueAdHocOtp",
+      "baseUrlType": "orchestrate",
+      "url": "issueOtp/launch",
+      "httpMethod": "post",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "approveRegistration",
+      "baseUrlType": "orchestrate",
+      "url": "updateRegistrationStatus/launch",
+      "httpMethod": "post",
+      "authType": "sso",
+      "deferred": true
+    },
+    {
+      "name": "denyRegistration",
+      "baseUrlType": "orchestrate",
+      "url": "updateRegistrationStatus/launch",
+      "httpMethod": "post",
+      "authType": "sso",
+      "deferred": true
+    }
+  ],
+  "presentation": {
+    "title": {
+      "type": "title",
+      "label": "Manage Team Commuters"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "id": "accessDeniedMsg",
+          "visible": "<% !currentUser.managementLevel || currentUser.managementLevel === 'Individual Contributor' %>",
+          "value": "Access denied. This page is only available to managers."
+        },
+        {
+          "type": "section",
+          "id": "managerContent",
+          "visible": "<% currentUser.managementLevel && currentUser.managementLevel !== 'Individual Contributor' %>",
+          "horizontal": false,
+          "children": [
+            {
+              "type": "richText",
+              "id": "noTeamMsg",
+              "visible": "<% teamRegistrations.teamRegistrations.length === 0 %>",
+              "value": "No car registrations found for your direct reports."
+            },
+            {
+              "type": "grid",
+              "id": "commutersGrid",
+              "visible": "<% teamRegistrations.teamRegistrations.length > 0 %>",
+              "on": "<% teamRegistrations.teamRegistrations %>",
+              "as": "reg",
+              "columns": [
+                {
+                  "id": "workerNameCol",
+                  "label": "Worker",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.workerName %>"
+                  }
+                },
+                {
+                  "id": "carCol",
+                  "label": "Vehicle",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.year + ' ' + reg.make + ' ' + reg.model %>"
+                  }
+                },
+                {
+                  "id": "plateCol",
+                  "label": "Plate",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.licensePlate + ' (' + reg.plateState + ')' %>"
+                  }
+                },
+                {
+                  "id": "distanceCol",
+                  "label": "Distance",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.distanceMiles > 0 ? Math.round(reg.distanceMiles) + ' mi' : 'N/A' %>"
+                  }
+                },
+                {
+                  "id": "eligibilityCol",
+                  "label": "Eligible",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.isEligible ? 'Yes' : 'No' %>"
+                  }
+                },
+                {
+                  "id": "statusCol",
+                  "label": "Status",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.status %>"
+                  }
+                },
+                {
+                  "id": "lastOtpCol",
+                  "label": "Last OTP",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.lastOtpDate || 'None' %>"
+                  }
+                },
+                {
+                  "id": "otpCountCol",
+                  "label": "OTP Count",
+                  "template": {
+                    "type": "text",
+                    "value": "<% reg.otpCount || 0 %>"
+                  }
+                },
+                {
+                  "id": "actionsCol",
+                  "label": "Actions",
+                  "template": {
+                    "type": "section",
+                    "horizontal": true,
+                    "children": [
+                      {
+                        "type": "button",
+                        "id": "approveBtn",
+                        "label": "Approve",
+                        "buttonStyle": "primary",
+                        "visible": "<% reg.status === 'pending' %>",
+                        "onClick": "<% approveRegistration.invoke({ data: { workerId: reg.workerId, status: 'approved' } }); %>"
+                      },
+                      {
+                        "type": "button",
+                        "id": "denyBtn",
+                        "label": "Deny",
+                        "buttonStyle": "destructive",
+                        "visible": "<% reg.status === 'pending' %>",
+                        "onClick": "<% denyRegistration.invoke({ data: { workerId: reg.workerId, status: 'denied', denialReason: 'Denied by manager' } }); %>"
+                      },
+                      {
+                        "type": "button",
+                        "id": "otpBtn",
+                        "label": "Issue OTP",
+                        "buttonStyle": "secondary",
+                        "visible": "<% reg.status === 'approved' %>",
+                        "onClick": "<% issueAdHocOtp.invoke({ data: { workerId: reg.workerId } }); %>"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}
