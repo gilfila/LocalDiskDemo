@@ -1,0 +1,85 @@
+// zipCodeCoordinates.script
+// Maps US zip codes to { lat, lng } centroid coordinates.
+// Dev dataset — replace ZIP_COORDS with full dataset before production.
+
+var ZIP_COORDS = {
+  // New York
+  "10001": { "lat": 40.7484, "lng": -73.9967 },
+  "10002": { "lat": 40.7157, "lng": -73.9863 },
+  "10003": { "lat": 40.7317, "lng": -73.9892 },
+  // Los Angeles
+  "90001": { "lat": 33.9731, "lng": -118.2479 },
+  "90210": { "lat": 34.0901, "lng": -118.4065 },
+  "90024": { "lat": 34.0635, "lng": -118.4437 },
+  // Chicago
+  "60601": { "lat": 41.8827, "lng": -87.6233 },
+  "60614": { "lat": 41.9244, "lng": -87.6530 },
+  "60657": { "lat": 41.9401, "lng": -87.6531 },
+  // San Francisco
+  "94102": { "lat": 37.7792, "lng": -122.4191 },
+  "94105": { "lat": 37.7897, "lng": -122.3942 },
+  "94107": { "lat": 37.7648, "lng": -122.3984 },
+  // Seattle
+  "98101": { "lat": 47.6089, "lng": -122.3352 },
+  "98103": { "lat": 47.6594, "lng": -122.3449 },
+  // Austin
+  "78701": { "lat": 30.2672, "lng": -97.7431 },
+  "78702": { "lat": 30.2587, "lng": -97.7176 },
+  // Boston
+  "02101": { "lat": 42.3584, "lng": -71.0598 },
+  "02115": { "lat": 42.3433, "lng": -71.0839 },
+  // Denver
+  "80201": { "lat": 39.7392, "lng": -104.9903 },
+  "80203": { "lat": 39.7287, "lng": -104.9805 },
+  // Atlanta
+  "30301": { "lat": 33.7490, "lng": -84.3880 },
+  "30303": { "lat": 33.7537, "lng": -84.3863 },
+  // Miami
+  "33101": { "lat": 25.7617, "lng": -80.1918 },
+  "33130": { "lat": 25.7653, "lng": -80.2001 },
+  // Dallas
+  "75201": { "lat": 32.7767, "lng": -96.7970 },
+  "75202": { "lat": 32.7775, "lng": -96.8019 },
+  // Phoenix
+  "85001": { "lat": 33.4484, "lng": -112.0740 },
+  "85004": { "lat": 33.4500, "lng": -112.0670 },
+  // Minneapolis
+  "55401": { "lat": 44.9778, "lng": -93.2650 },
+  "55414": { "lat": 44.9813, "lng": -93.2232 },
+  // Portland
+  "97201": { "lat": 45.5051, "lng": -122.6750 },
+  "97203": { "lat": 45.5831, "lng": -122.7374 },
+  // Washington DC
+  "20001": { "lat": 38.9072, "lng": -77.0369 },
+  "20002": { "lat": 38.8999, "lng": -76.9913 },
+  // Houston
+  "77001": { "lat": 29.7604, "lng": -95.3698 },
+  "77002": { "lat": 29.7543, "lng": -95.3677 },
+  // Philadelphia
+  "19101": { "lat": 39.9526, "lng": -75.1652 },
+  "19103": { "lat": 39.9533, "lng": -75.1756 },
+  // San Diego
+  "92101": { "lat": 32.7157, "lng": -117.1611 },
+  "92103": { "lat": 32.7468, "lng": -117.1592 },
+  // Detroit
+  "48201": { "lat": 42.3314, "lng": -83.0458 },
+  "48202": { "lat": 42.3706, "lng": -83.0708 },
+  // Nashville
+  "37201": { "lat": 36.1627, "lng": -86.7816 },
+  "37203": { "lat": 36.1453, "lng": -86.7932 },
+  // Charlotte
+  "28201": { "lat": 35.2271, "lng": -80.8431 },
+  "28203": { "lat": 35.2108, "lng": -80.8551 }
+};
+
+// Returns { lat, lng } for a zip code string, or null if not found.
+var getCoordsForZip = function(zip) {
+  if (!zip) { return null; }
+  var clean = zip.toString().trim().substring(0, 5);
+  return ZIP_COORDS[clean] || null;
+};
+
+{
+  "getCoordsForZip": getCoordsForZip,
+  "ZIP_COORDS": ZIP_COORDS
+}
