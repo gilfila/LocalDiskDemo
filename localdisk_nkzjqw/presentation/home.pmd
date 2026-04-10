@@ -123,14 +123,14 @@
               "label": "License Plate",
               "enabled": false,
               "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
-              "value": "<% workerRegistration.registration.licensePlate + ' (' + workerRegistration.registration.plateState + ')' %>"
+              "value": "<% (workerRegistration.registration.licensePlate || '') + ' (' + (workerRegistration.registration.plateState || '') + ')' %>"
             },
             {
               "type": "text",
               "id": "registrationStatusField",
               "label": "Status",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
               "value": "<% workerRegistration.registration.status %>"
             },
             {
@@ -139,7 +139,7 @@
               "label": "Commuter Benefit",
               "enabled": false,
               "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
-              "value": "<% workerRegistration.registration.isEligible ? 'Eligible (>' + workerRegistration.registration.distanceMiles + ' mi)' : 'Not eligible (<= 20 mi)' %>"
+              "value": "<% workerRegistration.registration.isEligible ? 'Eligible — ' + Math.round(workerRegistration.registration.distanceMiles) + ' mi from nearest office' : 'Not eligible — ' + Math.round(workerRegistration.registration.distanceMiles) + ' mi from nearest office' %>"
             },
             {
               "type": "text",
@@ -181,7 +181,7 @@
       "children": [
         {
           "type": "richText",
-          "enabled": "false",
+          "enabled": false,
           "value": "Powered By Workday Extend"
         }
       ]
