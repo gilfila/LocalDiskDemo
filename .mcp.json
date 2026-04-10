@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "workday-extend-mcp": {
+      "command": "wdcli",
+      "args": ["mcp"]
+    },
+    "workday-developer-agent": {
+      "command": "node",
+      "args": [".claude/mcp/workday-developer-agent.js"]
+    }
+  }
+}

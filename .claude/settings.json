@@ -1,0 +1,8 @@
+{
+  "enabledMcpjsonServers": ["workday-extend-mcp", "workday-developer-agent"],
+  "permissions": {
+    "allow": [
+      "Bash(wdcli:*)"
+    ]
+  }
+}
