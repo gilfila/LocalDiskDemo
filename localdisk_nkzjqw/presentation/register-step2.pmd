@@ -1,0 +1,93 @@
+{
+  "id": "register-step2",
+  "endPoints": [
+    {
+      "name": "submitRegistration",
+      "baseUrlType": "orchestrate",
+      "url": "submitCarRegistration/launch",
+      "httpMethod": "post",
+      "authType": "sso",
+      "deferred": true,
+      "onSend": "<% self.data = { workerId: taskParams.workerId, make: taskParams.make, model: taskParams.model, year: taskParams.year, licensePlate: taskParams.licensePlate, plateState: taskParams.plateState, distanceMiles: taskParams.distanceMiles, isEligible: taskParams.isEligible }; %>"
+    }
+  ],
+  "presentation": {
+    "pageType": "edit",
+    "title": {
+      "type": "title",
+      "label": "Register My Car — Step 2 of 3: Review"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "fieldSet",
+          "id": "reviewSection",
+          "title": "Review Your Details",
+          "children": [
+            {
+              "type": "text",
+              "id": "reviewMake",
+              "label": "Make",
+              "enabled": false,
+              "value": "<% taskParams.make %>"
+            },
+            {
+              "type": "text",
+              "id": "reviewModel",
+              "label": "Model",
+              "enabled": false,
+              "value": "<% taskParams.model %>"
+            },
+            {
+              "type": "text",
+              "id": "reviewYear",
+              "label": "Year",
+              "enabled": false,
+              "value": "<% taskParams.year %>"
+            },
+            {
+              "type": "text",
+              "id": "reviewPlate",
+              "label": "License Plate",
+              "enabled": false,
+              "value": "<% taskParams.licensePlate + ' (' + taskParams.plateState + ')' %>"
+            },
+            {
+              "type": "text",
+              "id": "reviewDistance",
+              "label": "Distance to Nearest Office",
+              "enabled": false,
+              "value": "<% taskParams.distanceMiles > 0 ? Math.round(taskParams.distanceMiles) + ' miles' : 'Unable to calculate' %>"
+            },
+            {
+              "type": "text",
+              "id": "reviewEligibility",
+              "label": "Commuter Benefit Eligibility",
+              "enabled": false,
+              "value": "<% taskParams.isEligible ? 'Eligible — annual $100 OTP' : 'Not eligible (< 20 miles)' %>"
+            }
+          ]
+        },
+        {
+          "type": "checkboxGroup",
+          "id": "confirmCheck",
+          "label": "Confirmation",
+          "required": true,
+          "options": [
+            { "id": "confirm", "descriptor": "I confirm the vehicle details above are correct" }
+          ]
+        },
+        {
+          "type": "button",
+          "id": "submitButton",
+          "label": "Submit for Approval",
+          "buttonStyle": "primary",
+          "enabled": "<% confirmCheck.value && confirmCheck.value.length > 0 %>",
+          "onClick": "<% submitRegistration.invoke(); %>"
+        }
+      ]
+    }
+  }
+}
