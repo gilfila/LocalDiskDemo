@@ -1,0 +1,74 @@
+{
+  "id": "register-step3",
+  "endPoints": [],
+  "presentation": {
+    "pageType": "confirm",
+    "title": {
+      "type": "title",
+      "label": "Registration Submitted"
+    },
+    "body": {
+      "type": "section",
+      "horizontal": false,
+      "children": [
+        {
+          "type": "richText",
+          "id": "confirmationMsg",
+          "value": "Your car registration has been submitted and is pending manager approval. You will be notified once your manager reviews your request."
+        },
+        {
+          "type": "fieldSet",
+          "id": "confirmationDetails",
+          "title": "Your Registration",
+          "children": [
+            {
+              "type": "text",
+              "id": "confirmMake",
+              "label": "Make",
+              "enabled": false,
+              "value": "<% taskParams.make %>"
+            },
+            {
+              "type": "text",
+              "id": "confirmModel",
+              "label": "Model",
+              "enabled": false,
+              "value": "<% taskParams.model %>"
+            },
+            {
+              "type": "text",
+              "id": "confirmYear",
+              "label": "Year",
+              "enabled": false,
+              "value": "<% taskParams.year %>"
+            },
+            {
+              "type": "text",
+              "id": "confirmPlate",
+              "label": "License Plate",
+              "enabled": false,
+              "value": "<% (taskParams.licensePlate || '') + ' (' + (taskParams.plateState || '') + ')' %>"
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "id": "returnHomeButton",
+          "label": "Return to Home",
+          "buttonStyle": "secondary",
+          "taskId": "home"
+        }
+      ]
+    },
+    "footer": {
+      "type": "footer",
+      "children": [
+        {
+          "type": "richText",
+          "enabled": false,
+          "value": "Powered By Workday Extend"
+        }
+      ]
+    }
+  }
+}
