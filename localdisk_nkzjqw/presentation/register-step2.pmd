@@ -85,9 +85,15 @@
           "label": "Submit for Approval",
           "buttonStyle": "primary",
           "enabled": "<% confirmCheck.value && confirmCheck.value.length > 0 %>",
-          "onClick": "<% submitRegistration.invoke(); %>"
+          "onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>"
         }
       ]
-    }
+    },
+    "outboundEndPoints": [
+      {
+        "name": "toConfirmation",
+        "onSend": "<% self.data = { make: taskParams.make, model: taskParams.model, year: taskParams.year, licensePlate: taskParams.licensePlate, plateState: taskParams.plateState }; %>"
+      }
+    ]
   }
 }

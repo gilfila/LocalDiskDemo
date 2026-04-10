@@ -14,10 +14,10 @@
   },
   "onApprove": {
     "orchestration": "updateRegistrationStatus",
-    "payload": { "status": "approved" }
+    "payload": { "status": "approved", "workerId": "<% businessObject.id %>" }
   },
   "onDeny": {
     "orchestration": "updateRegistrationStatus",
-    "payload": { "status": "denied" }
+    "payload": { "status": "denied", "workerId": "<% businessObject.id %>", "denialReason": "<% taskInput.denialReason %>" }
   }
 }

@@ -31,18 +31,27 @@
       }
     },
     {
+      "id": "computeCoords",
+      "name": "Compute Home and Office Coordinates",
+      "type": "Create Values",
+      "properties": {
+        "referenceName": "computeCoords",
+        "values": {
+          "homeCoords": "<% zipCodeCoordinates.getCoordsForZip(steps.getHomeAddress.responseData.homeZip) %>",
+          "officeCoords": "<% steps.getOfficeLocations.responseData.data.map(function(loc) { var c = zipCodeCoordinates.getCoordsForZip(loc.postalCode); return c ? { lat: c.lat, lng: c.lng } : null; }).filter(function(c) { return c !== null; }) %>"
+        }
+      }
+    },
+    {
       "id": "calculateDistance",
-      "name": "Calculate Distance",
+      "name": "Calculate Distance and Eligibility",
       "type": "Create Values",
       "properties": {
         "referenceName": "calculateDistance",
         "values": {
-          "homeZip": "<% steps.getHomeAddress.responseData.data[0].postalCode %>",
-          "homeCoords": "<% zipCodeCoordinates.getCoordsForZip(steps.getHomeAddress.responseData.data[0].postalCode) %>",
-          "officeCoords": "<% steps.getOfficeLocations.responseData.data.map(function(loc) { return zipCodeCoordinates.getCoordsForZip(loc.postalCode); }).filter(function(c) { return c !== null; }) %>",
-          "distanceMiles": "<% steps.calculateDistance.homeCoords !== null && steps.calculateDistance.officeCoords.length > 0 ? distanceCalculator.minDistanceToLocations(steps.calculateDistance.homeCoords.lat, steps.calculateDistance.homeCoords.lng, steps.calculateDistance.officeCoords) : -1 %>",
-          "isEligible": "<% steps.calculateDistance.distanceMiles > 20 %>",
-          "zipFound": "<% steps.calculateDistance.homeCoords !== null %>"
+          "distanceMiles": "<% steps.computeCoords.homeCoords !== null && steps.computeCoords.officeCoords.length > 0 ? distanceCalculator.minDistanceToLocations(steps.computeCoords.homeCoords.lat, steps.computeCoords.homeCoords.lng, steps.computeCoords.officeCoords) : -1 %>",
+          "isEligible": "<% steps.computeCoords.homeCoords !== null && steps.computeCoords.officeCoords.length > 0 ? distanceCalculator.minDistanceToLocations(steps.computeCoords.homeCoords.lat, steps.computeCoords.homeCoords.lng, steps.computeCoords.officeCoords) > 20 : false %>",
+          "zipFound": "<% steps.computeCoords.homeCoords !== null %>"
         }
       }
     }

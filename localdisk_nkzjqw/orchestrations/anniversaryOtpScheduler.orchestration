@@ -25,7 +25,7 @@
         "referenceName": "filterAnniversaries",
         "values": {
           "todayMonthDay": "<% date:format(date:now(), 'MM-dd') %>",
-          "dueToday": "<% steps.fetchEligible.responseData.data.filter(function(r) { return r.registrationDate && date:format(date:parse(r.registrationDate), 'MM-dd') === steps.filterAnniversaries.todayMonthDay; }) %>"
+          "dueToday": "<% steps.fetchEligible.responseData.data.filter(function(r) { return r.status === 'approved' && r.isEligible === true && r.registrationDate && date:format(date:parse(r.registrationDate), 'MM-dd') === steps.filterAnniversaries.todayMonthDay; }) %>"
         }
       }
     },
