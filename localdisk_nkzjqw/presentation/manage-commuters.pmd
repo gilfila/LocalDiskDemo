@@ -9,7 +9,7 @@
     },
     {
       "name": "teamRegistrations",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "getTeamRegistrations/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -18,7 +18,7 @@
     },
     {
       "name": "issueAdHocOtp",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "issueOtp/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -26,7 +26,7 @@
     },
     {
       "name": "approveRegistration",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "updateRegistrationStatus/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -34,7 +34,7 @@
     },
     {
       "name": "denyRegistration",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "updateRegistrationStatus/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -53,96 +53,105 @@
         {
           "type": "richText",
           "id": "accessDeniedMsg",
-          "visible": "<% !currentUser.managementLevel || currentUser.managementLevel === 'Individual Contributor' %>",
+          "visible": "<% !currentUser.managementLevel || currentUser.managementLevel == 'Individual Contributor' %>",
           "value": "Access denied. This page is only available to managers."
         },
         {
           "type": "section",
           "id": "managerContent",
-          "visible": "<% currentUser.managementLevel && currentUser.managementLevel !== 'Individual Contributor' %>",
+          "visible": "<% currentUser.managementLevel && currentUser.managementLevel != 'Individual Contributor' %>",
           "horizontal": false,
           "children": [
             {
               "type": "richText",
               "id": "noTeamMsg",
-              "visible": "<% teamRegistrations.teamRegistrations.length === 0 %>",
+              "visible": "<% teamRegistrations.teamRegistrations.length == 0 %>",
               "value": "No car registrations found for your direct reports."
             },
             {
               "type": "grid",
               "id": "commutersGrid",
               "visible": "<% teamRegistrations.teamRegistrations.length > 0 %>",
-              "on": "<% teamRegistrations.teamRegistrations %>",
-              "as": "reg",
+              "rows": "<% teamRegistrations.teamRegistrations %>",
+              "rowVariableName": "reg",
               "columns": [
                 {
-                  "id": "workerNameCol",
+                  "type": "column",
+                  "columnId": "workerNameCol",
                   "label": "Worker Name",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.workerName %>"
                   }
                 },
                 {
-                  "id": "carCol",
+                  "type": "column",
+                  "columnId": "carCol",
                   "label": "Vehicle",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.year + ' ' + reg.make + ' ' + reg.model %>"
                   }
                 },
                 {
-                  "id": "plateCol",
+                  "type": "column",
+                  "columnId": "plateCol",
                   "label": "Plate",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.licensePlate + ' (' + reg.plateState + ')' %>"
                   }
                 },
                 {
-                  "id": "distanceCol",
+                  "type": "column",
+                  "columnId": "distanceCol",
                   "label": "Distance",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.distanceMiles > 0 ? Math.round(reg.distanceMiles) + ' mi' : 'N/A' %>"
                   }
                 },
                 {
-                  "id": "eligibilityCol",
+                  "type": "column",
+                  "columnId": "eligibilityCol",
                   "label": "Eligible",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.isEligible ? 'Yes' : 'No' %>"
                   }
                 },
                 {
-                  "id": "statusCol",
+                  "type": "column",
+                  "columnId": "statusCol",
                   "label": "Status",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.status %>"
                   }
                 },
                 {
-                  "id": "lastOtpCol",
+                  "type": "column",
+                  "columnId": "lastOtpCol",
                   "label": "Last OTP",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.lastOtpDate || 'None' %>"
                   }
                 },
                 {
-                  "id": "otpCountCol",
+                  "type": "column",
+                  "columnId": "otpCountCol",
                   "label": "OTP Count",
-                  "template": {
-                    "type": "text",
+                  "cellTemplate": {
+                    "type": "readOnlyText",
                     "value": "<% reg.otpCount || 0 %>"
                   }
                 },
                 {
-                  "id": "actionsCol",
+                  "type": "column",
+                  "columnId": "actionsCol",
                   "label": "Actions",
-                  "template": {
+                  "cellTemplate": {
                     "type": "section",
                     "horizontal": true,
                     "children": [
@@ -150,25 +159,28 @@
                         "type": "button",
                         "id": "approveBtn",
                         "label": "Approve",
-                        "buttonStyle": "primary",
-                        "visible": "<% reg.status === 'pending' %>",
-                        "onClick": "<% approveRegistration.invoke({ data: { workerId: reg.workerId, status: 'approved' } }); %>"
+                        "action": "PRIMARY",
+                        "visible": "<% reg.status == 'pending' %>",
+                        "onClick": "<% approveRegistration.invoke({ workerId: reg.workerId, status: 'approved' }); %>",
+                        "taskReference": { "taskId": "manage-commuters" }
                       },
                       {
                         "type": "button",
                         "id": "denyBtn",
                         "label": "Deny",
-                        "buttonStyle": "destructive",
-                        "visible": "<% reg.status === 'pending' %>",
-                        "onClick": "<% denyRegistration.invoke({ data: { workerId: reg.workerId, status: 'denied', denialReason: 'Denied by manager' } }); %>"
+                        "action": "AUXILIARY",
+                        "visible": "<% reg.status == 'pending' %>",
+                        "onClick": "<% denyRegistration.invoke({ workerId: reg.workerId, status: 'denied', denialReason: 'Denied by manager' }); %>",
+                        "taskReference": { "taskId": "manage-commuters" }
                       },
                       {
                         "type": "button",
-                        "id": "otpBtn",
+                        "id": "issueOtpBtn",
                         "label": "Issue OTP",
-                        "buttonStyle": "secondary",
-                        "visible": "<% reg.status === 'approved' %>",
-                        "onClick": "<% issueAdHocOtp.invoke({ data: { workerId: reg.workerId } }); %>"
+                        "action": "AUXILIARY",
+                        "visible": "<% reg.status == 'approved' %>",
+                        "onClick": "<% issueAdHocOtp.invoke({ workerId: reg.workerId }); %>",
+                        "taskReference": { "taskId": "manage-commuters" }
                       }
                     ]
                   }

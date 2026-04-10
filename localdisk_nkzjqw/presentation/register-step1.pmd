@@ -17,6 +17,28 @@
       "onSend": "<% self.data = { workerId: currentUser.id }; %>"
     }
   ],
+  "outboundData": {
+    "outboundEndPoints": [
+      {
+        "name": "toReviewStep",
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          { "outboundPath": "make", "value": "<% carMake.value %>" },
+          { "outboundPath": "model", "value": "<% carModel.value %>" },
+          { "outboundPath": "year", "value": "<% carYear.value %>" },
+          { "outboundPath": "licensePlate", "value": "<% licensePlate.value %>" },
+          {
+            "outboundPath": "plateState",
+            "value": "<% plateState.value ? plateState.value.id : null %>"
+          },
+          { "outboundPath": "distanceMiles", "value": "<% eligibilityCheck.distanceMiles %>" },
+          { "outboundPath": "isEligible", "value": "<% eligibilityCheck.isEligible %>" },
+          { "outboundPath": "workerId", "value": "<% currentUser.id %>" }
+        ]
+      }
+    ]
+  },
   "presentation": {
     "pageType": "edit",
     "title": {
@@ -59,7 +81,7 @@
               "placeholder": "e.g. Camry"
             },
             {
-              "type": "numeric",
+              "type": "number",
               "id": "carYear",
               "label": "Year",
               "required": true,
@@ -136,12 +158,6 @@
           ]
         }
       ]
-    },
-    "outboundEndPoints": [
-      {
-        "name": "toReview",
-        "onSend": "<% self.data = { make: carMake.value, model: carModel.value, year: carYear.value, licensePlate: licensePlate.value, plateState: plateState.value ? plateState.value.id : null, distanceMiles: eligibilityCheck.distanceMiles, isEligible: eligibilityCheck.isEligible, workerId: currentUser.id }; %>"
-      }
-    ]
+    }
   }
 }

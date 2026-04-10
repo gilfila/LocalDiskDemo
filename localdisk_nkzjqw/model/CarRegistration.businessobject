@@ -11,16 +11,16 @@
     { "id": 1, "name": "workerId", "type": "TEXT", "label": "Worker ID", "isReferenceId": true, "useForDisplay": true },
     { "id": 2, "name": "make", "type": "TEXT", "label": "Make" },
     { "id": 3, "name": "model", "type": "TEXT", "label": "Model" },
-    { "id": 4, "name": "year", "type": "NUMERIC", "label": "Year" },
+    { "id": 4, "name": "year", "type": "INTEGER", "label": "Year" },
     { "id": 5, "name": "licensePlate", "type": "TEXT", "label": "License Plate" },
     { "id": 6, "name": "plateState", "type": "TEXT", "label": "Plate State" },
     { "id": 7, "name": "status", "type": "TEXT", "label": "Status", "description": "Values: pending | approved | denied" },
-    { "id": 8, "name": "distanceMiles", "type": "NUMERIC", "label": "Distance Miles" },
+    { "id": 8, "name": "distanceMiles", "type": "INTEGER", "label": "Distance Miles" },
     { "id": 9, "name": "isEligible", "type": "BOOLEAN", "label": "Is Eligible" },
-    { "id": 10, "name": "registrationDate", "type": "DATE", "label": "Registration Date" },
-    { "id": 11, "name": "approvedDate", "type": "DATE", "label": "Approved Date" },
+    { "id": 10, "name": "registrationDate", "type": "TEXT", "label": "Registration Date" },
+    { "id": 11, "name": "approvedDate", "type": "TEXT", "label": "Approved Date" },
     { "id": 12, "name": "denialReason", "type": "TEXT", "label": "Denial Reason" },
-    { "id": 13, "name": "lastOtpDate", "type": "DATE", "label": "Last OTP Date" },
-    { "id": 14, "name": "otpCount", "type": "NUMERIC", "label": "OTP Count" }
+    { "id": 13, "name": "lastOtpDate", "type": "TEXT", "label": "Last OTP Date" },
+    { "id": 14, "name": "otpCount", "type": "INTEGER", "label": "OTP Count" }
   ]
 }

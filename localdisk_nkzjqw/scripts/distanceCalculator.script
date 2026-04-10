@@ -26,7 +26,7 @@ var minDistanceToLocations = function(homeLat, homeLng, locations) {
   var minDist = null;
   for (var i = 0; i < locations.length; i++) {
     var dist = haversineDistance(homeLat, homeLng, locations[i].lat, locations[i].lng);
-    if (minDist === null || dist < minDist) {
+    if (minDist == null || dist < minDist) {
       minDist = dist;
     }
   }

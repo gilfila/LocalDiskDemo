@@ -8,7 +8,7 @@
       "httpMethod": "post",
       "authType": "sso",
       "deferred": true,
-      "onSend": "<% self.data = { workerId: taskParams.workerId, make: taskParams.make, model: taskParams.model, year: taskParams.year, licensePlate: taskParams.licensePlate, plateState: taskParams.plateState, distanceMiles: taskParams.distanceMiles, isEligible: taskParams.isEligible }; %>"
+      "onSend": "<% self.data = { workerId: flowVariables.workerId, make: flowVariables.make, model: flowVariables.model, year: flowVariables.year, licensePlate: flowVariables.licensePlate, plateState: flowVariables.plateState, distanceMiles: flowVariables.distanceMiles, isEligible: flowVariables.isEligible }; %>"
     }
   ],
   "presentation": {
@@ -31,68 +31,79 @@
               "id": "reviewMake",
               "label": "Make",
               "enabled": false,
-              "value": "<% taskParams.make %>"
+              "value": "<% flowVariables.make %>"
             },
             {
               "type": "text",
               "id": "reviewModel",
               "label": "Model",
               "enabled": false,
-              "value": "<% taskParams.model %>"
+              "value": "<% flowVariables.model %>"
             },
             {
               "type": "text",
               "id": "reviewYear",
               "label": "Year",
               "enabled": false,
-              "value": "<% taskParams.year %>"
+              "value": "<% flowVariables.year %>"
             },
             {
               "type": "text",
               "id": "reviewPlate",
               "label": "License Plate",
               "enabled": false,
-              "value": "<% taskParams.licensePlate + ' (' + taskParams.plateState + ')' %>"
+              "value": "<% flowVariables.licensePlate + ' (' + flowVariables.plateState + ')' %>"
             },
             {
               "type": "text",
               "id": "reviewDistance",
               "label": "Distance to Nearest Office",
               "enabled": false,
-              "value": "<% taskParams.distanceMiles > 0 ? Math.round(taskParams.distanceMiles) + ' miles' : 'Unable to calculate' %>"
+              "value": "<% flowVariables.distanceMiles > 0 ? Math.round(flowVariables.distanceMiles) + ' miles' : 'Unable to calculate' %>"
             },
             {
               "type": "text",
               "id": "reviewEligibility",
               "label": "Commuter Benefit Eligibility",
               "enabled": false,
-              "value": "<% taskParams.isEligible ? 'Eligible — annual $100 OTP' : 'Not eligible (must be > 20 miles from nearest office)' %>"
+              "value": "<% flowVariables.isEligible ? 'Eligible — annual $100 OTP' : 'Not eligible (must be > 20 miles from nearest office)' %>"
             }
           ]
         },
         {
-          "type": "checkboxGroup",
+          "type": "checkBoxList",
           "id": "confirmCheck",
           "label": "Confirmation",
           "required": true,
-          "options": [
-            { "id": "confirm", "descriptor": "I confirm the vehicle details above are correct" }
-          ]
+          "maxSelectable": 1,
+          "idKey": "id",
+          "displayKey": "descriptor",
+          "values": "<% [{ id: 'confirm', descriptor: 'I confirm the vehicle details above are correct' }] %>"
         },
         {
           "type": "button",
           "id": "submitButton",
           "label": "Submit for Approval",
-          "buttonStyle": "primary",
+          "action": "PRIMARY",
           "enabled": "<% confirmCheck.value && confirmCheck.value.length > 0 %>",
           "onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>"
         }
       ]
-    },
+    }
+  },
+  "outboundData": {
     "outboundEndPoints": [
       {
         "name": "toConfirmation",
-        "onSend": "<% self.data = { make: taskParams.make, model: taskParams.model, year: taskParams.year, licensePlate: taskParams.licensePlate, plateState: taskParams.plateState }; %>"
+        "type": "outboundVariable",
+        "variableScope": "flow",
+        "values": [
+          { "outboundPath": "make", "value": "<% flowVariables.make %>" },
+          { "outboundPath": "model", "value": "<% flowVariables.model %>" },
+          { "outboundPath": "year", "value": "<% flowVariables.year %>" },
+          { "outboundPath": "licensePlate", "value": "<% flowVariables.licensePlate %>" },
+          { "outboundPath": "plateState", "value": "<% flowVariables.plateState %>" }
+        ]
       }
     ]
   }

@@ -9,7 +9,7 @@
     },
     {
       "name": "workerRegistration",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "getWorkerRegistration/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -70,35 +70,39 @@
               "id": "registerButton",
               "label": "Register My Car",
               "visible": "<% !workerRegistration.hasRegistration %>",
-              "buttonStyle": "primary",
-              "taskId": "register-car"
+              "action": "PRIMARY",
+              "taskReference": {
+                "taskId": "register-car"
+              }
             },
             {
               "type": "richText",
               "id": "pendingMsg",
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'pending' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'pending' %>",
               "value": "Your registration is pending manager approval."
             },
             {
               "type": "richText",
               "id": "deniedMsg",
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'denied' %>",
               "value": "<% 'Your registration was denied. Reason: ' + (workerRegistration.registration.denialReason || 'No reason provided.') %>"
             },
             {
               "type": "button",
               "id": "reRegisterButton",
               "label": "Register Again",
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'denied' %>",
-              "buttonStyle": "primary",
-              "taskId": "register-car"
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'denied' %>",
+              "action": "PRIMARY",
+              "taskReference": {
+                "taskId": "register-car"
+              }
             },
             {
               "type": "text",
               "id": "carMake",
               "label": "Make",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% workerRegistration.registration.make %>"
             },
             {
@@ -106,7 +110,7 @@
               "id": "carModel",
               "label": "Model",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% workerRegistration.registration.model %>"
             },
             {
@@ -114,7 +118,7 @@
               "id": "carYear",
               "label": "Year",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% workerRegistration.registration.year %>"
             },
             {
@@ -122,7 +126,7 @@
               "id": "carPlate",
               "label": "License Plate",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% (workerRegistration.registration.licensePlate || '') + ' (' + (workerRegistration.registration.plateState || '') + ')' %>"
             },
             {
@@ -130,7 +134,7 @@
               "id": "registrationStatusField",
               "label": "Status",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status != 'denied' %>",
               "value": "<% workerRegistration.registration.status %>"
             },
             {
@@ -138,7 +142,7 @@
               "id": "eligibilityField",
               "label": "Commuter Benefit",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% workerRegistration.registration.isEligible ? 'Eligible — ' + Math.round(workerRegistration.registration.distanceMiles) + ' mi from nearest office' : 'Not eligible — ' + Math.round(workerRegistration.registration.distanceMiles) + ' mi from nearest office' %>"
             },
             {
@@ -146,7 +150,7 @@
               "id": "lastOtpField",
               "label": "Last OTP Issued",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' && workerRegistration.registration.lastOtpDate %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' && workerRegistration.registration.lastOtpDate %>",
               "value": "<% workerRegistration.registration.lastOtpDate %>"
             },
             {
@@ -154,7 +158,7 @@
               "id": "otpCountField",
               "label": "Total OTPs Received",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status == 'approved' %>",
               "value": "<% workerRegistration.registration.otpCount || 0 %>"
             }
           ]
@@ -163,14 +167,16 @@
           "type": "fieldSet",
           "id": "managerSection",
           "title": "Manager Actions",
-          "visible": "<% currentUser.managementLevel && currentUser.managementLevel !== 'Individual Contributor' %>",
+          "visible": "<% currentUser.managementLevel && currentUser.managementLevel != 'Individual Contributor' %>",
           "children": [
             {
               "type": "button",
               "id": "manageTeamButton",
               "label": "Manage My Team's Commuters",
-              "buttonStyle": "secondary",
-              "taskId": "manage-commuters"
+              "action": "AUXILIARY",
+              "taskReference": {
+                "taskId": "manage-commuters"
+              }
             }
           ]
         }

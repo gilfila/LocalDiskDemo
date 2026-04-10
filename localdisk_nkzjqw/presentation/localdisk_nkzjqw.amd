@@ -12,6 +12,10 @@
     {
       "key": "workday-customObjects",
       "value": "<% apiGatewayEndpoint + '/customobjects/v1' %>"
+    },
+    {
+      "key": "orchestration",
+      "value": "<% `{{apiGatewayEndpoint}}/orchestrate/v1/apps/{{site.applicationId}}/orchestrations/` %>"
     }
   ],
   "tasks": [
@@ -22,20 +26,23 @@
     },
     {
       "id": "register-step1",
+      "routingPattern": "/register/step1",
       "page": { "id": "register-step1" }
     },
     {
       "id": "register-step2",
+      "routingPattern": "/register/step2",
       "page": { "id": "register-step2" }
     },
     {
       "id": "register-step3",
+      "routingPattern": "/register/step3",
       "page": { "id": "register-step3" }
     },
     {
       "id": "register-car",
       "routingPattern": "/register",
-      "flow": { "id": "registerCarFlow" }
+      "page": { "id": "register-step1" }
     },
     {
       "id": "manage-commuters",
