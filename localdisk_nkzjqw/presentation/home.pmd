@@ -98,7 +98,7 @@
               "id": "carMake",
               "label": "Make",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
               "value": "<% workerRegistration.registration.make %>"
             },
             {
@@ -106,7 +106,7 @@
               "id": "carModel",
               "label": "Model",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
               "value": "<% workerRegistration.registration.model %>"
             },
             {
@@ -114,7 +114,7 @@
               "id": "carYear",
               "label": "Year",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
               "value": "<% workerRegistration.registration.year %>"
             },
             {
@@ -122,7 +122,7 @@
               "id": "carPlate",
               "label": "License Plate",
               "enabled": false,
-              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status !== 'denied' %>",
+              "visible": "<% workerRegistration.hasRegistration && workerRegistration.registration.status === 'approved' %>",
               "value": "<% workerRegistration.registration.licensePlate + ' (' + workerRegistration.registration.plateState + ')' %>"
             },
             {
