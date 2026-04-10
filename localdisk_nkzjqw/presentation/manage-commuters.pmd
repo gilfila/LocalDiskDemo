@@ -77,7 +77,7 @@
               "columns": [
                 {
                   "id": "workerNameCol",
-                  "label": "Worker",
+                  "label": "Worker Name",
                   "template": {
                     "type": "text",
                     "value": "<% reg.workerName %>"
