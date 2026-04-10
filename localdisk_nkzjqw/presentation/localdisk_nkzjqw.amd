@@ -1,18 +1,73 @@
 {
-  "appProperties": [ ],
+  "appProperties": [],
   "dataProviders": [
     {
       "key": "workday-staffing",
       "value": "<% apiGatewayEndpoint + '/staffing/v1' %>"
+    },
+    {
+      "key": "workday-common",
+      "value": "<% apiGatewayEndpoint + '/common/v1' %>"
+    },
+    {
+      "key": "workday-customObjects",
+      "value": "<% apiGatewayEndpoint + '/customobjects/v1' %>"
     }
   ],
   "tasks": [
     {
       "id": "home",
       "routingPattern": "/",
-      "page": {
-        "id": "home"
-      }
+      "page": { "id": "home" }
+    },
+    {
+      "id": "register-step1",
+      "page": { "id": "register-step1" }
+    },
+    {
+      "id": "register-step2",
+      "page": { "id": "register-step2" }
+    },
+    {
+      "id": "register-step3",
+      "page": { "id": "register-step3" }
+    },
+    {
+      "id": "register-car",
+      "routingPattern": "/register",
+      "flow": { "id": "registerCarFlow" }
+    },
+    {
+      "id": "manage-commuters",
+      "routingPattern": "/manage",
+      "page": { "id": "manage-commuters" }
+    }
+  ],
+  "flowDefinitions": [
+    {
+      "id": "registerCarFlow",
+      "flowSteps": [
+        {
+          "id": "carDetailsStep",
+          "startsFlow": true,
+          "taskId": "register-step1",
+          "transitions": [
+            { "order": "a", "value": "reviewStep", "condition": "true" }
+          ]
+        },
+        {
+          "id": "reviewStep",
+          "taskId": "register-step2",
+          "transitions": [
+            { "order": "a", "value": "confirmStep", "condition": "true" }
+          ]
+        },
+        {
+          "id": "confirmStep",
+          "endsFlow": true,
+          "taskId": "register-step3"
+        }
+      ]
     }
   ],
   "applicationId": "localdisk_nkzjqw"
