@@ -1,11 +1,5 @@
 {
   "appProperties": [ ],
-  "dataProviders": [
-    {
-      "key": "workday-staffing",
-      "value": "<% apiGatewayEndpoint + '/staffing/v1' %>"
-    }
-  ],
   "tasks": [
     {
       "id": "home",
