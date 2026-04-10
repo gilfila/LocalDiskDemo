@@ -1,0 +1,51 @@
+{
+  "id": "updateRegistrationStatus",
+  "name": "updateRegistrationStatus",
+  "label": "Update Registration Status",
+  "description": "BP callback — sets status to approved or denied on the worker's CarRegistration record. Called by CarRegistrationApproval BP on manager decision.",
+  "type": "synchronous",
+  "steps": [
+    {
+      "id": "fetchRecord",
+      "name": "Fetch Existing Record",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "fetchRecord",
+        "method": "GET",
+        "baseUrlType": "workday-customObjects",
+        "url": "<% 'customObjectDefinitions/CarRegistration/instances?workerId=' + input.workerId %>",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "buildPatch",
+      "name": "Build Patch Payload",
+      "type": "Create Values",
+      "properties": {
+        "referenceName": "buildPatch",
+        "values": {
+          "recordId": "<% steps.fetchRecord.responseData.data[0].id %>",
+          "patchBody": "<% input.status === 'approved' ? { status: 'approved', approvedDate: date:now() } : { status: 'denied', denialReason: input.denialReason } %>"
+        }
+      }
+    },
+    {
+      "id": "patchRecord",
+      "name": "Patch Record",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "patchRecord",
+        "method": "PATCH",
+        "baseUrlType": "workday-customObjects",
+        "url": "<% 'customObjectDefinitions/CarRegistration/instances/' + steps.buildPatch.recordId %>",
+        "authType": "sso",
+        "body": "<% steps.buildPatch.patchBody %>"
+      }
+    }
+  ],
+  "inboundFields": [
+    { "id": "workerId",      "type": "string",  "required": true },
+    { "id": "status",        "type": "string",  "required": true,  "note": "approved | denied" },
+    { "id": "denialReason",  "type": "string",  "required": false }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "getTeamRegistrations",
+  "name": "getTeamRegistrations",
+  "label": "Get Team Registrations",
+  "description": "Returns CarRegistration records for all of the manager's direct reports, joined with worker display names.",
+  "type": "synchronous",
+  "steps": [
+    {
+      "id": "getDirectReports",
+      "name": "Get Direct Reports",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "getDirectReports",
+        "method": "GET",
+        "baseUrlType": "workday-staffing",
+        "url": "<% 'workers/' + input.managerId + '/directReports?limit=100' %>",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "buildWorkerIds",
+      "name": "Build Worker IDs List",
+      "type": "Create Values",
+      "properties": {
+        "referenceName": "buildWorkerIds",
+        "values": {
+          "workerIds": "<% steps.getDirectReports.responseData.data.map(function(w) { return w.id; }) %>",
+          "workerNames": "<% steps.getDirectReports.responseData.data.reduce(function(acc, w) { acc[w.id] = w.descriptor; return acc; }, {}) %>"
+        }
+      }
+    },
+    {
+      "id": "fetchAllRegistrations",
+      "name": "Fetch All Registrations",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "fetchAllRegistrations",
+        "method": "GET",
+        "baseUrlType": "workday-customObjects",
+        "url": "customObjectDefinitions/CarRegistration/instances?limit=500",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "filterAndJoin",
+      "name": "Filter and Join with Worker Names",
+      "type": "Create Values",
+      "properties": {
+        "referenceName": "filterAndJoin",
+        "values": {
+          "teamRegistrations": "<% steps.fetchAllRegistrations.responseData.data.filter(function(r) { return steps.buildWorkerIds.workerIds.indexOf(r.workerId) !== -1; }).map(function(r) { return Object.assign({}, r, { workerName: steps.buildWorkerIds.workerNames[r.workerId] || r.workerId }); }) %>"
+        }
+      }
+    }
+  ],
+  "inboundFields": [
+    { "id": "managerId", "type": "string", "required": true }
+  ],
+  "outboundFields": [
+    { "id": "teamRegistrations", "label": "Team Registrations", "type": "array" }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "getWorkerEligibility",
+  "name": "getWorkerEligibility",
+  "label": "Get Worker Eligibility",
+  "description": "Calculates the worker's distance to the nearest office and returns eligibility for the commuter OTP benefit (> 20 miles = eligible).",
+  "type": "synchronous",
+  "include": ["distanceCalculator.script", "zipCodeCoordinates.script"],
+  "steps": [
+    {
+      "id": "getHomeAddress",
+      "name": "Get Home Address",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "getHomeAddress",
+        "method": "GET",
+        "baseUrlType": "workday-staffing",
+        "url": "<% 'workers/' + input.workerId + '/homeContactInformation' %>",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "getOfficeLocations",
+      "name": "Get Office Locations",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "getOfficeLocations",
+        "method": "GET",
+        "baseUrlType": "workday-common",
+        "url": "locations?type=Office&limit=50",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "calculateDistance",
+      "name": "Calculate Distance",
+      "type": "Create Values",
+      "properties": {
+        "referenceName": "calculateDistance",
+        "values": {
+          "homeZip": "<% steps.getHomeAddress.responseData.data[0].postalCode %>",
+          "homeCoords": "<% zipCodeCoordinates.getCoordsForZip(steps.getHomeAddress.responseData.data[0].postalCode) %>",
+          "officeCoords": "<% steps.getOfficeLocations.responseData.data.map(function(loc) { return zipCodeCoordinates.getCoordsForZip(loc.postalCode); }).filter(function(c) { return c !== null; }) %>",
+          "distanceMiles": "<% steps.calculateDistance.homeCoords !== null && steps.calculateDistance.officeCoords.length > 0 ? distanceCalculator.minDistanceToLocations(steps.calculateDistance.homeCoords.lat, steps.calculateDistance.homeCoords.lng, steps.calculateDistance.officeCoords) : -1 %>",
+          "isEligible": "<% steps.calculateDistance.distanceMiles > 20 %>",
+          "zipFound": "<% steps.calculateDistance.homeCoords !== null %>"
+        }
+      }
+    }
+  ],
+  "inboundFields": [
+    { "id": "workerId", "label": "Worker ID", "type": "string", "required": true }
+  ],
+  "outboundFields": [
+    { "id": "distanceMiles", "label": "Distance in Miles", "type": "numeric" },
+    { "id": "isEligible", "label": "Is Eligible (>20 mi)", "type": "boolean" },
+    { "id": "homeZip", "label": "Home Zip Code", "type": "string" },
+    { "id": "zipFound", "label": "Zip Code Found in Lookup", "type": "boolean" }
+  ]
+}

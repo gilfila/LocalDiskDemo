@@ -1,0 +1,64 @@
+{
+  "id": "issueOtp",
+  "name": "issueOtp",
+  "label": "Issue Commuter OTP",
+  "description": "Issues a $100 one-time payment to a worker via the CommuterOtp business process. Updates lastOtpDate and increments otpCount on the CarRegistration record.",
+  "type": "synchronous",
+  "steps": [
+    {
+      "id": "fetchRecord",
+      "name": "Fetch Registration Record",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "fetchRecord",
+        "method": "GET",
+        "baseUrlType": "workday-customObjects",
+        "url": "<% 'customObjectDefinitions/CarRegistration/instances?workerId=' + input.workerId %>",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "validateApproved",
+      "name": "Validate Status Is Approved",
+      "type": "Validate",
+      "properties": {
+        "referenceName": "validateApproved",
+        "condition": "<% steps.fetchRecord.responseData.data.length > 0 && steps.fetchRecord.responseData.data[0].status === 'approved' %>",
+        "errorMessage": "Worker does not have an approved car registration."
+      }
+    },
+    {
+      "id": "triggerOtpBP",
+      "name": "Trigger Commuter OTP Business Process",
+      "type": "Trigger Business Process",
+      "properties": {
+        "referenceName": "triggerOtpBP",
+        "targetId": "<% input.workerId %>",
+        "abpName": "CommuterOtp",
+        "authType": "sso"
+      }
+    },
+    {
+      "id": "updateRecord",
+      "name": "Update lastOtpDate and otpCount",
+      "type": "Send Workday API Request",
+      "properties": {
+        "referenceName": "updateRecord",
+        "method": "PATCH",
+        "baseUrlType": "workday-customObjects",
+        "url": "<% 'customObjectDefinitions/CarRegistration/instances/' + steps.fetchRecord.responseData.data[0].id %>",
+        "authType": "sso",
+        "body": {
+          "lastOtpDate": "<% date:now() %>",
+          "otpCount": "<% (steps.fetchRecord.responseData.data[0].otpCount || 0) + 1 %>"
+        }
+      }
+    }
+  ],
+  "inboundFields": [
+    { "id": "workerId", "type": "string", "required": true }
+  ],
+  "outboundFields": [
+    { "id": "success", "type": "boolean" }
+  ]
+}
