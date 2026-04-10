@@ -1,0 +1,23 @@
+{
+  "id": "CarRegistration",
+  "name": "CarRegistration",
+  "label": "Car Registration",
+  "description": "Stores a worker's parking garage car registration and commuter OTP eligibility",
+  "fields": [
+    { "id": "workerId",        "label": "Worker ID",          "type": "string",  "required": true },
+    { "id": "make",            "label": "Make",               "type": "string",  "required": true },
+    { "id": "model",           "label": "Model",              "type": "string",  "required": true },
+    { "id": "year",            "label": "Year",               "type": "numeric", "required": true },
+    { "id": "licensePlate",    "label": "License Plate",      "type": "string",  "required": true },
+    { "id": "plateState",      "label": "Plate State",        "type": "string",  "required": true },
+    { "id": "status",          "label": "Status",             "type": "string",  "required": true,
+      "note": "Values: pending | approved | denied" },
+    { "id": "distanceMiles",   "label": "Distance Miles",     "type": "numeric" },
+    { "id": "isEligible",      "label": "Is Eligible",        "type": "boolean" },
+    { "id": "registrationDate","label": "Registration Date",  "type": "date" },
+    { "id": "approvedDate",    "label": "Approved Date",      "type": "date" },
+    { "id": "denialReason",    "label": "Denial Reason",      "type": "string" },
+    { "id": "lastOtpDate",     "label": "Last OTP Date",      "type": "date" },
+    { "id": "otpCount",        "label": "OTP Count",          "type": "numeric" }
+  ]
+}
