@@ -1,0 +1,66 @@
+name: Promote App to Workday
+
+on:
+  workflow_dispatch:
+    inputs:
+      reference_id:
+        description: 'App reference ID (e.g. localdisk_nkzjqw)'
+        required: true
+        default: 'localdisk_nkzjqw'
+      tenant_alias:
+        description: 'Tenant lookup alias'
+        required: true
+      account:
+        description: 'Account short ID'
+        required: true
+        default: 'nkzjqw'
+      version:
+        description: 'App version number (leave empty to use --latest-version)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install wdcli
+        run: npm install -g @workday/wdcli
+
+      - name: Authenticate to Workday
+        env:
+          WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
+          WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
+        run: wdcli auth login --system-user
+
+      - name: Deploy app
+        env:
+          REFERENCE_ID: ${{ inputs.reference_id }}
+          TENANT_ALIAS: ${{ inputs.tenant_alias }}
+          ACCOUNT: ${{ inputs.account }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$VERSION" ]; then
+            wdcli app deploy "$REFERENCE_ID" \
+              --tenant-alias "$TENANT_ALIAS" \
+              --account "$ACCOUNT" \
+              --version "$VERSION" \
+              --ci
+          else
+            wdcli app deploy "$REFERENCE_ID" \
+              --tenant-alias "$TENANT_ALIAS" \
+              --account "$ACCOUNT" \
+              --latest-version \
+              --ci
+          fi
+
+      - name: Logout
+        if: always()
+        run: wdcli auth logout || true

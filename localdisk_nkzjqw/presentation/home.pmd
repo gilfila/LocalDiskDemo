@@ -27,6 +27,7 @@
       "horizontal": false,
       "children": [
         {
+<<<<<<< HEAD
           "type": "fieldSet",
           "id": "profileSection",
           "title": "My Profile",
