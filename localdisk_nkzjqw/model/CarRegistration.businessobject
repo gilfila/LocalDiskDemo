@@ -2,7 +2,7 @@
   "id": 1,
   "name": "CarRegistration",
   "label": "Car Registration",
-  "defaultSecurityDomains": [],
+  "defaultSecurityDomains": ["ManageCarRegistration"],
   "defaultCollection": {
     "name": "carRegistrations",
     "label": "Car Registrations"

@@ -3,7 +3,7 @@
   "name": "CommuterOtp",
   "label": "Commuter OTP",
   "description": "Issues a $100 one-time payment to an eligible worker as a commuter benefit",
-  "targetBusinessObject": "Worker",
+  "targetBusinessObject": "CarRegistration",
   "useForOrchestrate": false,
   "allowsCancel": false,
   "actionSteps": []

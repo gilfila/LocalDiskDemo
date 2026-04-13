@@ -1,0 +1,84 @@
+<h2>Design — Section 1: Page Flow & Navigation</h2>
+<p class="subtitle">How users move through the app</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+
+  <!-- Worker Flow -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#4a9eff;margin-bottom:0.8rem">Worker Flow</div>
+
+    <div style="display:flex;flex-direction:column;gap:0.5rem">
+
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:6px;padding:0.7rem 1rem">
+        <div style="font-size:0.8em;color:#f0c040;font-weight:600">📄 home.pmd  <span style="font-weight:normal;color:#888">Route: /</span></div>
+        <div style="font-size:0.78em;color:#aaa;margin-top:0.3rem">Shows worker profile + registration status card<br>• No car registered → "Register My Car" button<br>• Pending approval → status badge<br>• Approved → car details + OTP history</div>
+      </div>
+
+      <div style="text-align:center;color:#555;font-size:1.1em">↓ clicks Register</div>
+
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:6px;padding:0.7rem 1rem">
+        <div style="font-size:0.8em;color:#f0c040;font-weight:600">📄 register-car.pmd  <span style="font-weight:normal;color:#888">Route: /register</span></div>
+        <div style="font-size:0.78em;color:#aaa;margin-top:0.3rem">
+          <strong style="color:#ccc">Step 1 — Car Details</strong><br>
+          Make · Model · Year · License Plate · State<br>
+          Auto-checks home address distance on load<br><br>
+          <strong style="color:#ccc">Step 2 — Review</strong><br>
+          Summary of entered details + distance result<br>
+          Commuter benefit eligibility shown<br><br>
+          <strong style="color:#ccc">Step 3 — Confirmation</strong><br>
+          "Submitted for manager approval" screen
+        </div>
+      </div>
+
+      <div style="text-align:center;color:#555;font-size:1.1em">↓ submit → manager approval BP</div>
+
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:6px;padding:0.7rem 1rem;border-style:dashed">
+        <div style="font-size:0.78em;color:#888">Workday Business Process routes to manager inbox<br>On approve → registration active, OTP anniversary set<br>On deny → worker notified, can re-register</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Manager Flow -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#3fb950;margin-bottom:0.8rem">Manager Flow</div>
+
+    <div style="display:flex;flex-direction:column;gap:0.5rem">
+
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:6px;padding:0.7rem 1rem">
+        <div style="font-size:0.8em;color:#f0c040;font-weight:600">📄 home.pmd  <span style="font-weight:normal;color:#888">Route: /</span></div>
+        <div style="font-size:0.78em;color:#aaa;margin-top:0.3rem">Same home page — shows manager's own registration<br>+ "Manage My Team's Commuters" button if manager role</div>
+      </div>
+
+      <div style="text-align:center;color:#555;font-size:1.1em">↓ clicks Manage Team</div>
+
+      <div style="background:#161b22;border:1px solid #21262d;border-radius:6px;padding:0.7rem 1rem">
+        <div style="font-size:0.8em;color:#f0c040;font-weight:600">📄 manage-commuters.pmd  <span style="font-weight:normal;color:#888">Route: /manage</span></div>
+        <div style="font-size:0.78em;color:#aaa;margin-top:0.3rem">
+          Table of direct reports with registered cars<br>
+          Columns: Name · Car · Distance · Status · Last OTP · Actions<br><br>
+          <strong style="color:#ccc">Actions per row:</strong><br>
+          • Approve / Deny pending registrations<br>
+          • Trigger Ad-hoc OTP ($100)<br>
+          • View registration details
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:1.2rem;padding:0.8rem;background:#161b22;border-radius:6px;border-left:3px solid #3fb950">
+      <div style="font-size:0.75em;color:#888"><strong style="color:#ccc">Scheduled OTP (background)</strong><br>
+      Orchestration runs nightly · checks anniversary dates · auto-triggers $100 OTP for eligible approved workers</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1rem">
+  <div style="font-size:0.8em;color:#ccc;font-weight:600;margin-bottom:0.5rem">Pages summary (PMD files)</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;font-size:0.78em;color:#aaa">
+    <div>• <code style="color:#f0c040">home.pmd</code> — worker status hub</div>
+    <div>• <code style="color:#f0c040">register-car.pmd</code> — 3-step wizard</div>
+    <div>• <code style="color:#f0c040">manage-commuters.pmd</code> — manager table</div>
+  </div>
+</div>

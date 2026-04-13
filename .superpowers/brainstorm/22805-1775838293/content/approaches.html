@@ -1,0 +1,52 @@
+<h2>Three Architectural Approaches</h2>
+<p class="subtitle">How should we structure the pages and orchestration for the parking registration app?</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Single Hub Page</h3>
+      <p>One smart home page that shows/hides sections based on registration status. Manager view is a second page. Fewer files, simpler navigation.</p>
+      <br>
+      <div style="font-size:0.85em;color:#888;line-height:1.6">
+        Pages: <strong>Home</strong> (worker smart page) → <strong>Manage Commuters</strong> (manager page)<br>
+        Registration handled inline via form sections that appear/disappear<br>
+        ✓ Minimal file count &nbsp; ✗ Complex conditional logic in one PMD
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Multi-Page Wizard Flow <span style="font-size:0.75em;background:#2d6a4f;color:#fff;padding:2px 8px;border-radius:4px;margin-left:8px">Recommended</span></h3>
+      <p>Dedicated pages for each step. Worker flow is a 3-step wizard. Manager has a separate commuter table page. Clean separation, standard Workday Extend patterns.</p>
+      <br>
+      <div style="font-size:0.85em;color:#888;line-height:1.6">
+        Pages: <strong>Home/Status</strong> → <strong>Register Car</strong> (wizard: Details → Review → Confirm) → <strong>Manage Commuters</strong><br>
+        Each page has one clear responsibility<br>
+        ✓ Clean UX &nbsp; ✓ Easier to extend &nbsp; ✓ Proper Workday patterns
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Tabbed Navigation Portal</h3>
+      <p>Full portal with tabbed nav. Workers have "My Registration" and "My Benefits" tabs. Managers see "Team" and "OTP History" tabs. Most polished, most complex.</p>
+      <br>
+      <div style="font-size:0.85em;color:#888;line-height:1.6">
+        Pages: <strong>Worker Portal</strong> (2 tabs) + <strong>Manager Portal</strong> (2 tabs)<br>
+        Richer UX with benefit history, OTP log visible to workers<br>
+        ✓ Most complete &nbsp; ✗ Higher complexity &nbsp; ✗ More orchestrations needed
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:2rem;padding:1rem;background:#1a1a2e;border-radius:8px;border-left:3px solid #4a9eff">
+  <p style="margin:0;font-size:0.85em;color:#aaa"><strong style="color:#fff">All approaches include:</strong> Auto distance check via Workday home address API · Manager approval business process · Anniversary-based scheduled OTP ($100) · Ad-hoc OTP trigger for managers</p>
+</div>

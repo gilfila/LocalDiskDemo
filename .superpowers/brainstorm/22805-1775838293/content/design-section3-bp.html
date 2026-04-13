@@ -1,0 +1,116 @@
+<h2>Design — Section 3: Business Process & OTP Flow</h2>
+<p class="subtitle">Approval routing and payment triggers</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+
+  <!-- Approval BP -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#f0c040;margin-bottom:0.8rem">Manager Approval Business Process</div>
+
+    <div style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.8em">
+
+      <div style="display:flex;align-items:flex-start;gap:0.8rem;background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="width:22px;height:22px;border-radius:50%;background:#f0c040;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:0.85em">1</div>
+        <div><span style="color:#ccc;font-weight:600">Worker submits registration</span><br><span style="color:#888">submitCarRegistration orch saves record (status=pending) and triggers BP on worker business object</span></div>
+      </div>
+
+      <div style="text-align:center;color:#444">↓</div>
+
+      <div style="display:flex;align-items:flex-start;gap:0.8rem;background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="width:22px;height:22px;border-radius:50%;background:#f0c040;color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:0.85em">2</div>
+        <div><span style="color:#ccc;font-weight:600">Routes to manager inbox</span><br><span style="color:#888">Workday BP step: Approval — routes to worker's direct manager. Shows car details + distance + eligibility in task view.</span></div>
+      </div>
+
+      <div style="text-align:center;color:#444">↓</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem">
+        <div style="background:#0d2818;border:1px solid #238636;border-radius:6px;padding:0.6rem 0.8rem;font-size:0.9em">
+          <div style="color:#3fb950;font-weight:600">✓ Approved</div>
+          <div style="color:#888;margin-top:0.2rem;font-size:0.9em">Orch callback updates status=approved, sets approvedDate. Worker sees confirmed status on home page.</div>
+        </div>
+        <div style="background:#2d0f0f;border:1px solid #da3633;border-radius:6px;padding:0.6rem 0.8rem;font-size:0.9em">
+          <div style="color:#f85149;font-weight:600">✗ Denied</div>
+          <div style="color:#888;margin-top:0.2rem;font-size:0.9em">Orch callback updates status=denied. Worker sees denied status + "Register Again" button.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OTP Flow -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#d2a8ff;margin-bottom:0.8rem">OTP Payment Flow (2 triggers)</div>
+
+    <div style="display:flex;flex-direction:column;gap:0.8rem;font-size:0.8em">
+
+      <div style="background:#161b22;border-radius:6px;padding:0.8rem">
+        <div style="color:#d2a8ff;font-weight:600;margin-bottom:0.4rem">🕐 Annual Scheduled (Automatic)</div>
+        <div style="color:#888;line-height:1.7">
+          Nightly scheduled orchestration runs at <strong style="color:#ccc">midnight UTC</strong><br>
+          Queries all <code style="color:#79c0ff">status=approved AND isEligible=true</code> records<br>
+          Filters where <code style="color:#79c0ff">today == anniversary(registrationDate)</code><br>
+          Calls <strong style="color:#ccc">issueOtp</strong> for each match → $100 payment<br>
+          Updates <code style="color:#79c0ff">lastOtpDate</code> + increments <code style="color:#79c0ff">otpCount</code>
+        </div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.8rem">
+        <div style="color:#d2a8ff;font-weight:600;margin-bottom:0.4rem">⚡ Ad-hoc (Manager-triggered)</div>
+        <div style="color:#888;line-height:1.7">
+          Manager clicks "Issue OTP" on a row in manage-commuters page<br>
+          Calls <strong style="color:#ccc">issueOtp</strong> orchestration for that worker<br>
+          Button disabled after click + shows confirmation toast<br>
+          Works regardless of eligibility (manager override)
+        </div>
+      </div>
+
+      <div style="background:#1a1a2e;border:1px solid #3d3d6b;border-radius:6px;padding:0.7rem;font-size:0.9em">
+        <div style="color:#ccc;font-weight:600;margin-bottom:0.3rem">issueOtp orchestration steps</div>
+        <div style="color:#888;line-height:1.8">
+          1. Validate worker record exists + approved<br>
+          2. Trigger Workday OTP Business Process ($100)<br>
+          3. Update <code style="color:#79c0ff">lastOtpDate = today</code>, <code style="color:#79c0ff">otpCount++</code><br>
+          4. Return success/failure to caller
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- File structure -->
+<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+  <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#4a9eff;margin-bottom:0.8rem">Complete File Structure</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;font-size:0.78em">
+    <div>
+      <div style="color:#f0c040;font-weight:600;margin-bottom:0.4rem">Pages (PMDs)</div>
+      <div style="color:#888;line-height:1.9">
+        📄 home.pmd<br>
+        📄 register-car.pmd<br>
+        📄 manage-commuters.pmd
+      </div>
+    </div>
+    <div>
+      <div style="color:#d2a8ff;font-weight:600;margin-bottom:0.4rem">Orchestrations</div>
+      <div style="color:#888;line-height:1.9">
+        ⚙️ getWorkerEligibility<br>
+        ⚙️ submitCarRegistration<br>
+        ⚙️ getWorkerRegistration<br>
+        ⚙️ getTeamRegistrations<br>
+        ⚙️ issueOtp<br>
+        ⚙️ anniversaryOtpScheduler
+      </div>
+    </div>
+    <div>
+      <div style="color:#3fb950;font-weight:600;margin-bottom:0.4rem">Supporting</div>
+      <div style="color:#888;line-height:1.9">
+        📦 CarRegistration (CBO)<br>
+        🔧 distanceCalculator (script module)<br>
+        🔧 zipCodeCoordinates (script module)<br>
+        📋 Car Registration Approval (BP)<br>
+        📋 Commuter OTP (BP)
+      </div>
+    </div>
+  </div>
+</div>

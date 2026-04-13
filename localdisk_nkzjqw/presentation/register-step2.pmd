@@ -3,7 +3,7 @@
   "endPoints": [
     {
       "name": "submitRegistration",
-      "baseUrlType": "orchestrate",
+      "baseUrlType": "orchestration",
       "url": "submitCarRegistration/launch",
       "httpMethod": "post",
       "authType": "sso",
@@ -86,7 +86,10 @@
           "label": "Submit for Approval",
           "action": "PRIMARY",
           "enabled": "<% confirmCheck.value && confirmCheck.value.length > 0 %>",
-          "onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>"
+          "onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>",
+          "taskReference": {
+            "taskId": "register-step3"
+          }
         }
       ]
     }

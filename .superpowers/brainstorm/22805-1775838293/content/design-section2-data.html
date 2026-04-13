@@ -1,0 +1,96 @@
+<h2>Design — Section 2: Data Model & Orchestrations</h2>
+<p class="subtitle">What we store and what runs behind the scenes</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+
+  <!-- Custom Business Object -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#f78166;margin-bottom:0.8rem">Custom Business Object — CarRegistration</div>
+    <div style="font-size:0.8em;color:#aaa;line-height:2">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:0.2rem 1rem">
+        <span style="color:#79c0ff">workerId</span><span style="color:#888">Text — Workday worker ID (key)</span>
+        <span style="color:#79c0ff">make</span><span style="color:#888">Text</span>
+        <span style="color:#79c0ff">model</span><span style="color:#888">Text</span>
+        <span style="color:#79c0ff">year</span><span style="color:#888">Numeric</span>
+        <span style="color:#79c0ff">licensePlate</span><span style="color:#888">Text</span>
+        <span style="color:#79c0ff">plateState</span><span style="color:#888">Text</span>
+        <span style="color:#79c0ff">status</span><span style="color:#888">Text — pending / approved / denied</span>
+        <span style="color:#79c0ff">distanceMiles</span><span style="color:#888">Numeric — calculated at registration</span>
+        <span style="color:#79c0ff">isEligible</span><span style="color:#888">Boolean — distanceMiles > 20</span>
+        <span style="color:#79c0ff">registrationDate</span><span style="color:#888">Date</span>
+        <span style="color:#79c0ff">approvedDate</span><span style="color:#888">Date</span>
+        <span style="color:#79c0ff">lastOtpDate</span><span style="color:#888">Date — last OTP issued</span>
+        <span style="color:#79c0ff">otpCount</span><span style="color:#888">Numeric — total OTPs issued</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orchestrations -->
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+    <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#d2a8ff;margin-bottom:0.8rem">Orchestrations (6)</div>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;font-size:0.8em">
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">getWorkerEligibility</div>
+        <div style="color:#888;margin-top:0.2rem">Fetches worker home address + nearest office location → calculates distance via Haversine formula → returns miles + eligibility flag</div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">submitCarRegistration</div>
+        <div style="color:#888;margin-top:0.2rem">Saves CarRegistration object with status=pending → triggers manager approval business process</div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">getWorkerRegistration</div>
+        <div style="color:#888;margin-top:0.2rem">Returns current worker's CarRegistration record for home page status display</div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">getTeamRegistrations</div>
+        <div style="color:#888;margin-top:0.2rem">Returns all CarRegistration records for manager's direct reports — powers the manage-commuters table</div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">issueOtp</div>
+        <div style="color:#888;margin-top:0.2rem">Issues $100 OTP payment for a worker → updates lastOtpDate + otpCount on CarRegistration. Used by both scheduled and ad-hoc flows.</div>
+      </div>
+
+      <div style="background:#161b22;border-radius:6px;padding:0.6rem 0.8rem">
+        <div style="color:#d2a8ff;font-weight:600">anniversaryOtpScheduler</div>
+        <div style="color:#888;margin-top:0.2rem">Scheduled nightly — queries all approved+eligible registrations → filters where today = anniversary of registrationDate → calls issueOtp for each match</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Distance calc note -->
+<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:1.2rem">
+  <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:#4a9eff;margin-bottom:0.8rem">Distance Calculation (getWorkerEligibility)</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;font-size:0.8em;text-align:center">
+    <div style="background:#161b22;border-radius:6px;padding:0.7rem">
+      <div style="color:#4a9eff;font-size:1.2em;margin-bottom:0.3rem">①</div>
+      <div style="color:#ccc;font-weight:600">Get Home Address</div>
+      <div style="color:#888;font-size:0.9em;margin-top:0.2rem">Workday Staffing API<br>/workers/me/homeContact</div>
+    </div>
+    <div style="background:#161b22;border-radius:6px;padding:0.7rem">
+      <div style="color:#4a9eff;font-size:1.2em;margin-bottom:0.3rem">②</div>
+      <div style="color:#ccc;font-weight:600">Get Office Locations</div>
+      <div style="color:#888;font-size:0.9em;margin-top:0.2rem">Workday Location API<br>filter by type=office</div>
+    </div>
+    <div style="background:#161b22;border-radius:6px;padding:0.7rem">
+      <div style="color:#4a9eff;font-size:1.2em;margin-bottom:0.3rem">③</div>
+      <div style="color:#ccc;font-weight:600">Haversine Distance</div>
+      <div style="color:#888;font-size:0.9em;margin-top:0.2rem">Script module computes miles to each office → takes minimum</div>
+    </div>
+    <div style="background:#161b22;border-radius:6px;padding:0.7rem">
+      <div style="color:#4a9eff;font-size:1.2em;margin-bottom:0.3rem">④</div>
+      <div style="color:#ccc;font-weight:600">Eligibility Flag</div>
+      <div style="color:#888;font-size:0.9em;margin-top:0.2rem">distanceMiles > 20 → isEligible = true</div>
+    </div>
+  </div>
+  <div style="margin-top:0.8rem;font-size:0.78em;color:#666;padding:0.5rem;background:#161b22;border-radius:4px">
+    ⚠️ Workday address data contains city/state/zip but not lat/lng. We'll use a script module with a geocoding lookup table for major cities, or optionally wire in a geocoding API endpoint.
+  </div>
+</div>

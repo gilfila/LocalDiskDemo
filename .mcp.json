@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "workday-extend-mcp": {
+    "workday-extend-wdcli": {
       "command": "wdcli",
       "args": ["mcp"]
     },

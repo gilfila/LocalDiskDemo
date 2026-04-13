@@ -26,28 +26,28 @@
               "id": "confirmMake",
               "label": "Make",
               "enabled": false,
-              "value": "<% taskParams.make %>"
+              "value": "<% flowVariables.make %>"
             },
             {
               "type": "text",
               "id": "confirmModel",
               "label": "Model",
               "enabled": false,
-              "value": "<% taskParams.model %>"
+              "value": "<% flowVariables.model %>"
             },
             {
               "type": "text",
               "id": "confirmYear",
               "label": "Year",
               "enabled": false,
-              "value": "<% taskParams.year %>"
+              "value": "<% flowVariables.year %>"
             },
             {
               "type": "text",
               "id": "confirmPlate",
               "label": "License Plate",
               "enabled": false,
-              "value": "<% (taskParams.licensePlate || '') + ' (' + (taskParams.plateState || '') + ')' %>"
+              "value": "<% (flowVariables.licensePlate || '') + ' (' + (flowVariables.plateState || '') + ')' %>"
             }
           ]
         },
@@ -55,8 +55,10 @@
           "type": "button",
           "id": "returnHomeButton",
           "label": "Return to Home",
-          "buttonStyle": "secondary",
-          "taskId": "home"
+          "action": "AUXILIARY",
+          "taskReference": {
+            "taskId": "home"
+          }
         }
       ]
     },
