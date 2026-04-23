@@ -26,19 +26,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install wdcli
-        run: npm install -g @workday/wdcli
+      - name: Extract wdcli
+        run: |
+          tar -xzf bin/wdcli-installer-linux-x64-v1.7.25.tar.gz -C bin/
+          chmod +x bin/wdcli/bin/wdcli
 
       - name: Authenticate to Workday
         env:
           WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
           WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
-        run: wdcli auth login --system-user
+        run: bin/wdcli/bin/wdcli auth login --system-user
 
       - name: Deploy app
         env:
@@ -48,13 +45,13 @@ jobs:
           VERSION: ${{ inputs.version }}
         run: |
           if [ -n "$VERSION" ]; then
-            wdcli app deploy "$REFERENCE_ID" \
+            bin/wdcli/bin/wdcli app deploy "$REFERENCE_ID" \
               --tenant-alias "$TENANT_ALIAS" \
               --account "$ACCOUNT" \
               --version "$VERSION" \
               --ci
           else
-            wdcli app deploy "$REFERENCE_ID" \
+            bin/wdcli/bin/wdcli app deploy "$REFERENCE_ID" \
               --tenant-alias "$TENANT_ALIAS" \
               --account "$ACCOUNT" \
               --latest-version \
@@ -63,4 +60,4 @@ jobs:
 
       - name: Logout
         if: always()
-        run: wdcli auth logout || true
+        run: bin/wdcli/bin/wdcli auth logout || true

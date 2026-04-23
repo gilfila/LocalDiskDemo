@@ -1,0 +1,35 @@
+name: Deploy on Merge
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract wdcli
+        run: |
+          tar -xzf bin/wdcli-installer-linux-x64-v1.7.25.tar.gz -C bin/
+          chmod +x bin/wdcli/bin/wdcli
+
+      - name: Authenticate
+        run: bin/wdcli/bin/wdcli auth login --system-user
+        env:
+          WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
+          WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
+
+      - name: Deploy app
+        run: |
+          bin/wdcli/bin/wdcli app deploy ${{ vars.WDCLI_APP_REF_ID }} \
+            --tenant-alias ${{ vars.WDCLI_TENANT_ALIAS }} \
+            --account ${{ vars.WDCLI_ACCOUNT }} \
+            --latest-version \
+            --ci
+
+      - name: Logout
+        if: always()
+        run: bin/wdcli/bin/wdcli auth logout || true
