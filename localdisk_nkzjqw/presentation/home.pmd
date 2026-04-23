@@ -20,7 +20,7 @@
   "presentation": {
     "title": {
       "type": "title",
-      "label": "Parking Registration"
+      "label": "Parking Registration Test"
     },
     "body": {
       "type": "section",
