@@ -26,7 +26,7 @@ jobs:
         run: bin/wdcli/bin/wdcli tenant login ${{ vars.WDCLI_TENANT_ALIAS }}
 
       - name: Upload app to App Hub
-        run: bin/wdcli/bin/wdcli app upload
+        run: bin/wdcli/bin/wdcli app upload localdisk_nkzjqw --account ${{ vars.WDCLI_ACCOUNT }} --ci
 
       - name: Deploy app
         run: |
