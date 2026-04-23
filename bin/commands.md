@@ -75,6 +75,37 @@ Uploads the application to App Hub as specified by directory.
 
 wdcli app upload
 
+USAGE
+  $ wdcli app upload [SOURCEDIRECTORY] [--no-build-wait] [--ci] [-f json|tabular] [-a <value> | ]
+
+ARGUMENTS
+  [SOURCEDIRECTORY]  Path to the app directory to upload.
+
+FLAGS
+  -a, --account=<value>  Account short ID
+  -f, --format=<option>  Override the configured results format
+                         <options: json|tabular>
+      --ci               Enables continuous Integration mode, which does not allow interactivity
+      --no-build-wait    Upload the app without waiting for the build to complete. A successful build is required to deploy to
+                         a tenant. The default is to wait for the build to complete.
+
+DESCRIPTION
+  Uploads the app as specified by directory.
+
+FLAG DESCRIPTIONS
+  -a, --account=<value>  Account short ID
+
+    Company short ID (overrides the default configured company, if any)
+
+  -f, --format=json|tabular  Override the configured results format
+
+    Override the configured results output format.
+
+  --ci  Enables continuous Integration mode, which does not allow interactivity
+
+    Turns on CI (Continuous Integration) settings. This automatically turns on --no-interactive to allow commands to fail fast
+
+
 versions
 
 Displays versions for a given app.
