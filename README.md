@@ -2,12 +2,7 @@
 
 ## GitHub Actions Setup
 
-Two workflows are included:
-
-| Workflow | Trigger | Purpose |
-|---|---|---|
-| `deploy-on-merge.yml` | Push to `main` | Automatically deploys on merge |
-| `deployToDev.yml` | Manual (`workflow_dispatch`) | Manually deploy a specific version |
+The `deploy-on-merge.yml` workflow automatically deploys to Workday on every merge to `main`.
 
 ### 1. Add Secrets
 
@@ -38,10 +33,3 @@ On every merge to `main`, the deploy workflow will:
 4. Run `wdcli app deploy` using the variables above
 5. Log out
 
-### 4. Manual deploy
-
-To deploy a specific version manually:
-
-1. Go to **Actions → Promote App to Workday → Run workflow**
-2. Fill in the reference ID, tenant alias, account, and optionally a version number
-3. Leave version blank to deploy the latest version
