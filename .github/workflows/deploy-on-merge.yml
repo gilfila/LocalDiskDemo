@@ -22,19 +22,8 @@ jobs:
           WDCLI_CLIENT_ID: ${{ secrets.WDCLI_CLIENT_ID }}
           WDCLI_CLIENT_SECRET: ${{ secrets.WDCLI_CLIENT_SECRET }}
 
-      - name: Tenant login
-        run: bin/wdcli/bin/wdcli tenant login ${{ vars.WDCLI_TENANT_ALIAS }} --ci
-
       - name: Upload app to App Hub
         run: bin/wdcli/bin/wdcli app upload localdisk_nkzjqw --account ${{ vars.WDCLI_ACCOUNT }} --ci
-
-      - name: Deploy app
-        run: |
-          bin/wdcli/bin/wdcli app deploy ${{ vars.WDCLI_APP_REF_ID }} \
-            --tenant-alias ${{ vars.WDCLI_TENANT_ALIAS }} \
-            --account ${{ vars.WDCLI_ACCOUNT }} \
-            --latest-version \
-            --ci
 
       - name: Logout
         if: always()
