@@ -2,10 +2,7 @@
 
 ## Documentation Reference
 
-Whenever a request involves Workday Extend (pages, widgets, orchestrations, scripts, cards, flows, data bindings, PMD/AMD/SMD files, or any Workday platform development), you MUST first consult the documentation folder at:
+Whenever a request involves Workday Extend (pages, widgets, orchestrations, scripts, cards, flows, data bindings, PMD/AMD/SMD files, or any Workday platform development), you MUST first consult the documentation folder in the root of this project "Documentation and Forum Content":
 
-```
-/Users/tony.gilfillan/Desktop/Documentation and Forum Content
-```
 
 Search this folder for relevant documentation on best practices before implementing or advising on any Workday Extend work. Use the docs to guide structure, naming conventions, API usage, and platform patterns.
