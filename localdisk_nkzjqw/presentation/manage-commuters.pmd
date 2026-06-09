@@ -15,7 +15,7 @@
       "authType": "sso",
       "deferred": false,
       "onSend": "<% self.data = { managerId: currentUser.id }; %>"
-    },
+    }
   ],
   "presentation": {
     "title": {
