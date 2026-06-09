@@ -16,30 +16,6 @@
       "deferred": false,
       "onSend": "<% self.data = { managerId: currentUser.id }; %>"
     },
-    {
-      "name": "issueAdHocOtp",
-      "baseUrlType": "orchestration",
-      "url": "issueOtp/launch",
-      "httpMethod": "post",
-      "authType": "sso",
-      "deferred": true
-    },
-    {
-      "name": "approveRegistration",
-      "baseUrlType": "orchestration",
-      "url": "updateRegistrationStatus/launch",
-      "httpMethod": "post",
-      "authType": "sso",
-      "deferred": true
-    },
-    {
-      "name": "denyRegistration",
-      "baseUrlType": "orchestration",
-      "url": "updateRegistrationStatus/launch",
-      "httpMethod": "post",
-      "authType": "sso",
-      "deferred": true
-    }
   ],
   "presentation": {
     "title": {
@@ -156,31 +132,46 @@
                     "horizontal": true,
                     "children": [
                       {
-                        "type": "button",
-                        "id": "approveBtn",
-                        "label": "Approve",
-                        "action": "PRIMARY",
-                        "visible": "<% reg.status == 'pending' %>",
-                        "onClick": "<% approveRegistration.invoke({ workerId: reg.workerId, status: 'approved' }); %>",
-                        "taskReference": { "taskId": "manage-commuters" }
+                        "type": "section",
+                        "children": [
+                          {
+                            "type": "button",
+                            "id": "approveBtn",
+                            "label": "Approve",
+                            "action": "PRIMARY",
+                            "visible": "<% reg.status == 'pending' %>",
+                            "_onClick": "<% approveRegistration.invoke({ workerId: reg.workerId, status: 'approved' }); %>",
+                            "taskReference": { "taskId": "manage-commuters" }
+                          }
+                        ]
                       },
                       {
-                        "type": "button",
-                        "id": "denyBtn",
-                        "label": "Deny",
-                        "action": "AUXILIARY",
-                        "visible": "<% reg.status == 'pending' %>",
-                        "onClick": "<% denyRegistration.invoke({ workerId: reg.workerId, status: 'denied', denialReason: 'Denied by manager' }); %>",
-                        "taskReference": { "taskId": "manage-commuters" }
+                        "type": "section",
+                        "children": [
+                          {
+                            "type": "button",
+                            "id": "denyBtn",
+                            "label": "Deny",
+                            "action": "AUXILIARY",
+                            "visible": "<% reg.status == 'pending' %>",
+                            "_onClick": "<% denyRegistration.invoke({ workerId: reg.workerId, status: 'denied', denialReason: 'Denied by manager' }); %>",
+                            "taskReference": { "taskId": "manage-commuters" }
+                          }
+                        ]
                       },
                       {
-                        "type": "button",
-                        "id": "issueOtpBtn",
-                        "label": "Issue OTP",
-                        "action": "AUXILIARY",
-                        "visible": "<% reg.status == 'approved' %>",
-                        "onClick": "<% issueAdHocOtp.invoke({ workerId: reg.workerId }); %>",
-                        "taskReference": { "taskId": "manage-commuters" }
+                        "type": "section",
+                        "children": [
+                          {
+                            "type": "button",
+                            "id": "issueOtpBtn",
+                            "label": "Issue OTP",
+                            "action": "AUXILIARY",
+                            "visible": "<% reg.status == 'approved' %>",
+                            "_onClick": "<% issueAdHocOtp.invoke({ workerId: reg.workerId }); %>",
+                            "taskReference": { "taskId": "manage-commuters" }
+                          }
+                        ]
                       }
                     ]
                   }

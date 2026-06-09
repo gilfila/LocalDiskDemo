@@ -85,9 +85,9 @@
               "id": "carYear",
               "label": "Year",
               "required": true,
-              "minValue": 1980,
-              "maxValue": 2027,
-              "placeholder": "e.g. 2022"
+              "_minValue": 1980,
+              "_maxValue": 2027,
+              "_placeholder": "e.g. 2022"
             },
             {
               "type": "text",

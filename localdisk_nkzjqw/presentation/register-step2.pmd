@@ -1,16 +1,6 @@
 {
   "id": "register-step2",
-  "endPoints": [
-    {
-      "name": "submitRegistration",
-      "baseUrlType": "orchestration",
-      "url": "submitCarRegistration/launch",
-      "httpMethod": "post",
-      "authType": "sso",
-      "deferred": true,
-      "onSend": "<% self.data = { workerId: flowVariables.workerId, make: flowVariables.make, model: flowVariables.model, year: flowVariables.year, licensePlate: flowVariables.licensePlate, plateState: flowVariables.plateState, distanceMiles: flowVariables.distanceMiles, isEligible: flowVariables.isEligible }; %>"
-    }
-  ],
+  "endPoints": [],
   "presentation": {
     "pageType": "edit",
     "title": {
@@ -86,7 +76,7 @@
           "label": "Submit for Approval",
           "action": "PRIMARY",
           "enabled": "<% confirmCheck.value && confirmCheck.value.length > 0 %>",
-          "onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>",
+          "_onClick": "<% submitRegistration.invoke(); toConfirmation.invoke(); %>",
           "taskReference": {
             "taskId": "register-step3"
           }
