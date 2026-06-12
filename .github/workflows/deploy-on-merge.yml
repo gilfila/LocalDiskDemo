@@ -25,13 +25,11 @@ jobs:
       - name: Upload app to App Hub
         run: bin/wdcli/bin/wdcli app upload localdisk_nkzjqw --account ${{ vars.WDCLI_ACCOUNT }} --ci
 
-      - name: Deploy app
-        run: |
-          bin/wdcli/bin/wdcli app deploy ${{ vars.WDCLI_APP_REF_ID }} \
-            --tenant-alias ${{ vars.WDCLI_TENANT_ALIAS }} \
-            --account ${{ vars.WDCLI_ACCOUNT }} \
-            --latest-version \
-            --ci
+      # App deploy to the tenant is not automated here: wdcli (1.7.25) requires a
+      # tenanted access token for `app deploy`, and `wdcli tenant login` only
+      # supports an interactive browser PKCE flow — it cannot run headless in CI.
+      # Deploy the uploaded version from App Hub, or locally via:
+      #   wdcli tenant login <alias> && wdcli app deploy localdisk_nkzjqw --latest-version
 
       - name: Logout
         if: always()
